@@ -925,7 +925,7 @@ bool DownloadThread::_customizeImage()
     QString configFilename;
     bool foundFile = false;
 
-    for (int tries = 0; tries < 3; tries++)
+    for (int tries = 0; tries < 60; tries++)
     {
         /* Search all mountpoints, as on some systems FAT partition
            may not be first volume */
