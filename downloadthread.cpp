@@ -892,12 +892,20 @@ bool DownloadThread::_customizeImage()
             mountpoints.push_back(td.path().toStdString());
             args << "-t" << "vfat" << fatpartition << td.path();
 
-            if (QProcess::execute("mount", args) != 0)
+            for (int tries = 0; tries < 60; tries++)
             {
-                emit error(tr("Error mounting FAT32 partition"));
-                return false;
+                if (QProcess::execute("mount", args) == 0)
+                {
+                    td.setAutoRemove(false);
+                    break;
+                }
+                if (tries == 59)
+                {
+                    emit error(tr("Error mounting FAT32 partition"));
+                    return false;   
+                }
+                QThread::sleep(1);
             }
-            td.setAutoRemove(false);
         }
     }
 #endif
